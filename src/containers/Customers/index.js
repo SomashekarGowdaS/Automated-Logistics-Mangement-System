@@ -6,9 +6,9 @@ const CustomersContainer = (props) => {
 
 
     return (
-        <div>
-            <CustomersList />
-            <AddCustomer />
+        <div className="grid-container" >
+            <div class="grid-item"> <CustomersList /> </div>
+            <div class="grid-item"> <AddCustomer /> </div>
         </div>
     )
 }

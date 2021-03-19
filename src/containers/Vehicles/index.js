@@ -4,9 +4,9 @@ import VehiclesList from './VehiclesList'
 
 const VehiclesContainer = (props) => {
     return (
-        <div>
-            <VehiclesList />
-            <AddVehicle />
+        <div className="grid-container" >
+            <div class="grid-item"> <VehiclesList /> </div>
+            <div class="grid-item"> <AddVehicle /> </div>
         </div>
     )
 }

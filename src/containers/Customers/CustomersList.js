@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
+import './styles.css';
 
 const CustomersList = (props) => {
     const customers = useSelector((state) => {
@@ -22,11 +23,12 @@ const CustomersList = (props) => {
 
     return (
         <div>
-            <input type="text" value={searchText} onChange={handleSearch} />
+            <h1> Customers List </h1>
+            <input type="text" value={searchText} onChange={handleSearch} placeholder="Search" />
             { getCustomers().length === 0 ? (
                 <p> No Customers Available </p>
             ) : (
-                <table>
+                <table id="tableStyle" >
                     <thead>
                         <tr>
                             <th>Customer Name</th>

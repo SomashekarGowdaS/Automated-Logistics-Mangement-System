@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import './styles.css'
 
 const ItemsList = (props) => {
     const items = useSelector((state) => {
@@ -22,11 +23,12 @@ const ItemsList = (props) => {
 
     return (
         <div>
-            <input type="text" value={searchText} onChange={handleSearch} />
+            <h1> Items List </h1>
+            <input type="text" value={searchText} onChange={handleSearch} placeholder="Search" />
             { getItems().length === 0 ? (
                 <p> No Items Available </p>
             ) : (
-                <table>
+                <table id="tableStyle">
                     <thead>
                         <tr>
                             <th>Item Name</th>

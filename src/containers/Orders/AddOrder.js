@@ -6,15 +6,16 @@ import { v4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import FormFields from '../../components/FormFields';
 import { updateVehicles } from '../../actions/vehiclesActions';
+import { addOrder } from '../../actions/ordersActions';
 
 const initSchema = {
-    customerId: yup.string().required(),
-    vehicleId: yup.string().required()
+    customerId: yup.string().required('*Select Customer'),
+    vehicleId: yup.string().required('*Select Vehicle')
 }
 
 const AddOrder = (props) => {
     const [schema, setSchema] = useState(initSchema)
-    const { register, handleSubmit, watch, errors } = useForm({
+    const { register, handleSubmit, watch, errors, reset } = useForm({
         resolver: yupResolver(yup.object().shape(schema)),
     });
     const watchAllFields = watch();
@@ -56,12 +57,12 @@ const AddOrder = (props) => {
             let obj = {};
             obj.label = vehicle.registrationNumber;
             obj.value = vehicle.registrationNumber;
-            obj.availability = vehicle.availability
+            obj.availability = vehicle.availability;
             return obj
         })
         const formFields = [
-            { label: "Customers", name: 'customerId', register, error: errors.customers ? errors.customers : {}, type: 'select', options: customerOptions },
-            { label: "Vehicles", name: 'vehicleId', register, error: errors.vehicles ? errors.vehicles : {}, type: 'select', options: vehicleOptions }
+            { label: "Customers", name: 'customerId', register, error: errors.customerId ? errors.customerId : {}, type: 'select', options: customerOptions },
+            { label: "Vehicles", name: 'vehicleId', register, error: errors.vehicleId ? errors.vehicleId : {}, type: 'select', options: vehicleOptions }
         ];
         setFormFields(formFields)
     }, [vehiclesState, itemsState, customersState]);
@@ -91,38 +92,26 @@ const AddOrder = (props) => {
     useEffect(() => {
         if (deliveryLocation) {
             const availableVehiclesForCurrentLocation = vehiclesState.filter(vehicle => {
-                return vehicle.city.toLowerCase() === deliveryLocation.toLowerCase();
+                return vehicle.city.toLowerCase() === deliveryLocation.toLowerCase() && vehicle.availability;
             });
 
-            if (availableVehiclesForCurrentLocation) {
-                const availableVehicle = availableVehiclesForCurrentLocation.find(vehicle => {
-                    return vehicle.availability;
-                });
-                console.log(availableVehicle)
-                if (availableVehicle) {
-                    const vehicleOptions = vehiclesState.map(vehicle => {
-                        let obj = {};
-                        obj.label = vehicle.registrationNumber;
-                        obj.value = vehicle.registrationNumber;
-                        obj.availability = !(vehicle.registrationNumber === availableVehicle.registrationNumber)
-                        return obj;
-                    });
-                    const vehicleStateClone = vehiclesState.map(vehicle => {
-                        vehicle.availability = !(vehicle.registrationNumber === availableVehicle.registrationNumber);
-                        return vehicle;
-                    });
-                    dispatch(updateVehicles(vehicleStateClone));
-                    let formFieldsClone = formFields.filter(item => item.label !== "Vehicles");
-                    formFieldsClone.push({
-                        label: "Vehicles", name: 'vehicleId', register, error: errors.vehicles ? errors.vehicles : {}, type: 'select', options: vehicleOptions
-                    })
-                    setFormFields(formFieldsClone)
-                }
-            }
+            const vehicleOptions = availableVehiclesForCurrentLocation.map(vehicle => {
+                let obj = {};
+                obj.label = vehicle.registrationNumber;
+                obj.value = vehicle.registrationNumber;
+                obj.availability = vehicle.availability;
+                return obj;
+            });
+
+            let formFieldsClone = formFields.filter(item => item.label !== "Vehicles");
+            formFieldsClone.push({
+                label: "Vehicles", name: 'vehicleId', register, error: errors.vehicleId ? errors.vehicleId : {}, type: 'select', options: vehicleOptions
+            })
+            setFormFields(formFieldsClone);
         }
     }, [deliveryLocation]);
 
-    const onSubmit = (data) => {
+    const onSubmit = (data, e) => {
         let formData = {
             orderId: v4(),
             ...data,
@@ -149,7 +138,17 @@ const AddOrder = (props) => {
         })
 
         formDataClone = { ...formDataClone, items: finalItems, totalPrice, deliveryLocation }
-        console.log(formDataClone);
+        let vehicleStateClone = [...vehiclesState];
+
+        const submittedIndex = vehiclesState.findIndex(item => item.registrationNumber === formDataClone.vehicleId);
+        vehicleStateClone[submittedIndex] = {
+            ...vehicleStateClone[submittedIndex],
+            availability: false
+        }
+        dispatch(updateVehicles(vehicleStateClone));
+        dispatch(addOrder(formDataClone));
+        e.target.reset()
+        setDeliveryLocation("")
     }
 
     const handleAddItem = () => {
@@ -158,7 +157,8 @@ const AddOrder = (props) => {
         setItemCount(itemCountClone);
     }
     return (
-        <div>
+        <>
+            <h1> Add Order </h1>
             <form onSubmit={handleSubmit(onSubmit)} >
                 {formFields.map(field => (
                     <FormFields key={field.name} {...field} />
@@ -173,6 +173,9 @@ const AddOrder = (props) => {
                                     return <option key={item.id} value={item.id}> {item.itemName} </option>
                                 })}
                             </select> <br />
+                            {errors && errors[`item${count}`] && (
+                                <p className="errorMessage">{errors[`item${count}`].message}</p>
+                            )}
                         </div>
                     )
                 })}
@@ -183,7 +186,7 @@ const AddOrder = (props) => {
                 <input type="text" value={deliveryLocation} disabled /> <br />
                 <input type="submit" value="Place Order" />
             </form>
-        </div>
+        </>
     )
 }
 

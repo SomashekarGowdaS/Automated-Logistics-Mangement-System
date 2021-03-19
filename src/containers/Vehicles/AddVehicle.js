@@ -9,9 +9,9 @@ import FormFields from '../../components/FormFields';
 import { vehicleOptions } from '../../constants'
 
 const schema = yup.object().shape({
-    registrationNumber: yup.string().required(),
-    vehicleType: yup.string().required(),
-    city: yup.string().required()
+    registrationNumber: yup.string().required('*Enter Registration Number'),
+    vehicleType: yup.string().required('*Select Vehicle Type'),
+    city: yup.string().required('*Enter City')
 });
 
 const AddVehicle = (props) => {
@@ -36,14 +36,15 @@ const AddVehicle = (props) => {
     }
 
     return (
-        <div>
+        <>
+            <h1> Add Vehicle </h1>
             <form onSubmit={handleSubmit(onSubmit)} >
                 {formFields.map(field => (
                     <FormFields key={field.name} {...field} />
                 ))}
                 <input type="submit" value="Add Vehicle" />
             </form>
-        </div>
+        </>
     )
 }
 

@@ -9,11 +9,11 @@ import { addItem } from '../../actions/itemsActions';
 import FormFields from '../../components/FormFields'
 
 const schema = yup.object().shape({
-    itemName: yup.string().required(),
+    itemName: yup.string().required('*Enter Item Name'),
     price: yup
-        .number()
-        .required()
-        .positive()
+        .number('*Enter Numbers Only')
+        .required('*Enter Price')
+        .positive('*Enter Positive Numbers Only')
 });
 
 const AddItem = (props) => {
@@ -37,14 +37,15 @@ const AddItem = (props) => {
     }
 
     return (
-        <div>
+        <>
+            <h1> Add Item </h1>
             <form onSubmit={handleSubmit(onSubmit)} >
                 {formFields.map(field => (
                     <FormFields key={field.name} {...field} />
                 ))}
                 <input type="submit" value="Add Item" />
             </form>
-        </div>
+        </>
     )
 }
 

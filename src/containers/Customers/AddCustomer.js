@@ -9,8 +9,8 @@ import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
 const schema = yup.object().shape({
-    customerName: yup.string().required(),
-    city: yup.string().required()
+    customerName: yup.string().required('*Enter Customer Name'),
+    city: yup.string().required('*Enter City')
 });
 
 const AddCustomer = (props) => {
@@ -34,14 +34,15 @@ const AddCustomer = (props) => {
     }
 
     return (
-        <div>
+        <>
+            <h1> Add Customer </h1>
             <form onSubmit={handleSubmit(onSubmit)} >
                 {formFields.map(field => (
                     <FormFields key={field.name} {...field} />
                 ))}
                 <input type="submit" value="Add Customer" />
             </form>
-        </div>
+        </>
     )
 }
 

@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import './styles.css';
 
 export default function FormFields(props) {
     const { label, name, error, register, type, options } = props;
@@ -11,11 +12,11 @@ export default function FormFields(props) {
                         <select name={name} ref={register}>
                             <option value="" hidden>Select</option>
                             {options.map(item => (
-                                <option disabled={item.availability} key={item.value} value={item.value}>{item.label}</option>
+                                <option key={item.value} value={item.value}>{item.label}</option>
                             ))}
                         </select> <br />
                         {error && (
-                            <p>{error.message}</p>
+                            <p className="errorMessage">{error.message}</p>
                         )}
                     </Fragment>
                 );
@@ -25,7 +26,7 @@ export default function FormFields(props) {
                         <label>{label}</label>
                         <input type="text" name={name} ref={register} /> <br />
                         {error && (
-                            <p>{error.message}</p>
+                            <p className="errorMessage">{error.message}</p>
                         )}
                     </Fragment>
                 )

@@ -1,6 +1,6 @@
 const customersInitialState = [
-    { id: '5466aaaaa', customerName: 'Harish', city: 'Mysore' },
-    { id: '5899aass', customerName: 'Naga', city: 'Mandya' }
+    { id: '5466aaaaa', customerName: 'Harish', city: 'Mandya' },
+    { id: '5899aass', customerName: 'Naga', city: 'Mysore' }
 ];
 
 export const customersReducer = ((state = customersInitialState, action) => {
@@ -8,8 +8,6 @@ export const customersReducer = ((state = customersInitialState, action) => {
         case 'ADD_CUSTOMER': {
             return [...state, action.payload];
         }
-
-
         default: {
             return [...state];
         }
