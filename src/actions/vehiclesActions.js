@@ -5,3 +5,10 @@ export const addVehicle = (vehicle) => {
         payload: vehicle
     }
 }
+
+export const updateVehicles = (vehicles) => {
+    return {
+        type: 'UPDATE_VEHICLES',
+        payload: vehicles
+    }
+}

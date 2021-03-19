@@ -3,8 +3,9 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { v4 } from 'uuid';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import FormFields from '../../components/FormFields';
+import { updateVehicles } from '../../actions/vehiclesActions';
 
 const initSchema = {
     customerId: yup.string().required(),
@@ -17,20 +18,20 @@ const AddOrder = (props) => {
         resolver: yupResolver(yup.object().shape(schema)),
     });
     const watchAllFields = watch();
-
-    const vehicles = useSelector((state) => {
+    const vehiclesState = useSelector((state) => {
         return state.vehicles;
     });
     const itemsState = useSelector((state) => {
         return state.items;
     });
-    const customers = useSelector((state) => {
+    const customersState = useSelector((state) => {
         return state.customers;
     });
     const [totalPrice, setTotalPrice] = useState(0);
-
     const [formFields, setFormFields] = useState([]);
     const [itemCount, setItemCount] = useState([1]);
+    const [deliveryLocation, setDeliveryLocation] = useState('');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let schemaClone = { ...schema };
@@ -45,16 +46,17 @@ const AddOrder = (props) => {
     }, [itemCount])
 
     useEffect(() => {
-        const customerOptions = customers.map(customer => {
+        const customerOptions = customersState.map(customer => {
             let obj = {};
             obj.label = customer.customerName;
             obj.value = customer.id;
             return obj;
         });
-        const vehicleOptions = vehicles.map(vehicle => {
+        const vehicleOptions = vehiclesState.map(vehicle => {
             let obj = {};
             obj.label = vehicle.registrationNumber;
             obj.value = vehicle.registrationNumber;
+            obj.availability = vehicle.availability
             return obj
         })
         const formFields = [
@@ -62,7 +64,7 @@ const AddOrder = (props) => {
             { label: "Vehicles", name: 'vehicleId', register, error: errors.vehicles ? errors.vehicles : {}, type: 'select', options: vehicleOptions }
         ];
         setFormFields(formFields)
-    }, [vehicles, itemsState, customers]);
+    }, [vehiclesState, itemsState, customersState]);
 
     useEffect(() => {
         let totalPrice = 0;
@@ -77,8 +79,48 @@ const AddOrder = (props) => {
             if (currentItem)
                 totalPrice = totalPrice + currentItem.price;
         });
-        setTotalPrice(totalPrice)
+        setTotalPrice(totalPrice);
+        const customer = customersState.find(customer => {
+            return customer.id === watchAllFields.customerId;
+        });
+        if (customer) {
+            setDeliveryLocation(customer.city);
+        }
     }, [watchAllFields]);
+
+    useEffect(() => {
+        if (deliveryLocation) {
+            const availableVehiclesForCurrentLocation = vehiclesState.filter(vehicle => {
+                return vehicle.city.toLowerCase() === deliveryLocation.toLowerCase();
+            });
+
+            if (availableVehiclesForCurrentLocation) {
+                const availableVehicle = availableVehiclesForCurrentLocation.find(vehicle => {
+                    return vehicle.availability;
+                });
+                console.log(availableVehicle)
+                if (availableVehicle) {
+                    const vehicleOptions = vehiclesState.map(vehicle => {
+                        let obj = {};
+                        obj.label = vehicle.registrationNumber;
+                        obj.value = vehicle.registrationNumber;
+                        obj.availability = !(vehicle.registrationNumber === availableVehicle.registrationNumber)
+                        return obj;
+                    });
+                    const vehicleStateClone = vehiclesState.map(vehicle => {
+                        vehicle.availability = !(vehicle.registrationNumber === availableVehicle.registrationNumber);
+                        return vehicle;
+                    });
+                    dispatch(updateVehicles(vehicleStateClone));
+                    let formFieldsClone = formFields.filter(item => item.label !== "Vehicles");
+                    formFieldsClone.push({
+                        label: "Vehicles", name: 'vehicleId', register, error: errors.vehicles ? errors.vehicles : {}, type: 'select', options: vehicleOptions
+                    })
+                    setFormFields(formFieldsClone)
+                }
+            }
+        }
+    }, [deliveryLocation]);
 
     const onSubmit = (data) => {
         let formData = {
@@ -106,7 +148,7 @@ const AddOrder = (props) => {
             finalItems.push(currentValue[0])
         })
 
-        formDataClone = { ...formDataClone, items: finalItems, totalPrice }
+        formDataClone = { ...formDataClone, items: finalItems, totalPrice, deliveryLocation }
         console.log(formDataClone);
     }
 
@@ -115,7 +157,6 @@ const AddOrder = (props) => {
         itemCountClone.push(itemCount.length + 1);
         setItemCount(itemCountClone);
     }
-
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)} >
@@ -139,7 +180,7 @@ const AddOrder = (props) => {
                 <label> Total Price </label>
                 <input type="text" value={totalPrice} disabled /> <br />
                 <label> Delivery Location </label>
-                <input type="text" disabled /> <br />
+                <input type="text" value={deliveryLocation} disabled /> <br />
                 <input type="submit" value="Place Order" />
             </form>
         </div>

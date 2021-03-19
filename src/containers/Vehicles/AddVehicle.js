@@ -1,6 +1,5 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
-import { v4 } from 'uuid'
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -30,6 +29,7 @@ const AddVehicle = (props) => {
     const onSubmit = (data) => {
         const formData = {
             ...data,
+            availability: true
         }
         dispatch(addVehicle(formData));
         toast.dark("Vehicle added!");
