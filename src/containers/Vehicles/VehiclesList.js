@@ -13,11 +13,7 @@ const VehiclesList = (props) => {
     }
 
     const getVehicles = () => {
-        const filteredVehicles = vehicles.filter(vehicle => {
-            if (vehicle.registrationNumber.toLowerCase().includes(searchText.toLowerCase()) || vehicle.vehicleType.toLowerCase().includes(searchText.toLowerCase()) || vehicle.city.toLowerCase().includes(searchText.toLowerCase())) {
-                return vehicle;
-            }
-        });
+        const filteredVehicles = vehicles.filter(vehicle => vehicle.registrationNumber.toLowerCase().includes(searchText.toLowerCase()) || vehicle.vehicleType.toLowerCase().includes(searchText.toLowerCase()) || vehicle.city.toLowerCase().includes(searchText.toLowerCase()));
         return filteredVehicles;
     }
 

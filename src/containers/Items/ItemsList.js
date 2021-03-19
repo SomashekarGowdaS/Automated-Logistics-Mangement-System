@@ -13,11 +13,7 @@ const ItemsList = (props) => {
     }
 
     const getItems = () => {
-        const filteredItems = items.filter(item => {
-            if (item.itemName.toLowerCase().includes(searchText.toLowerCase()) || item.price.toString().includes(searchText)) {
-                return item;
-            }
-        });
+        const filteredItems = items.filter(item => item.itemName.toLowerCase().includes(searchText.toLowerCase()) || item.price.toString().includes(searchText));
         return filteredItems;
     }
 

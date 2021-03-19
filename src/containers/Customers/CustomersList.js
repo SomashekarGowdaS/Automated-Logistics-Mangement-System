@@ -13,11 +13,7 @@ const CustomersList = (props) => {
     }
 
     const getCustomers = () => {
-        const filteredCustomers = customers.filter(customer => {
-            if (customer.customerName.toLowerCase().includes(searchText) || customer.city.toLowerCase().includes(searchText)) {
-                return customer;
-            }
-        });
+        const filteredCustomers = customers.filter(customer => customer.customerName.toLowerCase().includes(searchText) || customer.city.toLowerCase().includes(searchText));
         return filteredCustomers;
     }
 

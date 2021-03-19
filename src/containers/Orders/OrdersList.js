@@ -13,11 +13,7 @@ const OrdersList = (props) => {
     }
 
     const getOrders = () => {
-        const filteredOrders = orders.filter(order => {
-            if (order.orderId.toLowerCase().includes(searchText) || order.customerId.toLowerCase().toLowerCase().includes(searchText)) {
-                return order;
-            }
-        });
+        const filteredOrders = orders.filter(order => order.orderId.toLowerCase().includes(searchText) || order.customerId.toLowerCase().toLowerCase().includes(searchText));
         return filteredOrders;
     }
 

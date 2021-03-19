@@ -15,7 +15,7 @@ const initSchema = {
 
 const AddOrder = (props) => {
     const [schema, setSchema] = useState(initSchema)
-    const { register, handleSubmit, watch, errors, reset } = useForm({
+    const { register, handleSubmit, watch, errors } = useForm({
         resolver: yupResolver(yup.object().shape(schema)),
     });
     const watchAllFields = watch();
