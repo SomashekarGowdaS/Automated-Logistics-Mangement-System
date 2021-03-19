@@ -44,6 +44,7 @@ const AddOrder = (props) => {
             schemaClone = { ...obj, ...schemaClone }
         });
         setSchema(schemaClone);
+        // eslint-disable-next-line
     }, [itemCount])
 
     useEffect(() => {
@@ -65,6 +66,7 @@ const AddOrder = (props) => {
             { label: "Vehicles", name: 'vehicleId', register, error: errors.vehicleId ? errors.vehicleId : {}, type: 'select', options: vehicleOptions }
         ];
         setFormFields(formFields)
+        // eslint-disable-next-line
     }, [vehiclesState, itemsState, customersState]);
 
     useEffect(() => {
@@ -87,6 +89,7 @@ const AddOrder = (props) => {
         if (customer) {
             setDeliveryLocation(customer.city);
         }
+        // eslint-disable-next-line
     }, [watchAllFields]);
 
     useEffect(() => {
@@ -109,6 +112,7 @@ const AddOrder = (props) => {
             })
             setFormFields(formFieldsClone);
         }
+        // eslint-disable-next-line
     }, [deliveryLocation]);
 
     const onSubmit = (data, e) => {
@@ -120,7 +124,8 @@ const AddOrder = (props) => {
 
         // converting list of items to array
         let items = [];
-        let index = 1
+        let index = 1;
+        // eslint-disable-next-line
         for (let key in formData) {
             items.push(formData[`item${index}`]);
             delete formDataClone[`item${index}`];
@@ -149,6 +154,7 @@ const AddOrder = (props) => {
         dispatch(addOrder(formDataClone));
         e.target.reset()
         setDeliveryLocation("")
+        setItemCount([1])
     }
 
     const handleAddItem = () => {
