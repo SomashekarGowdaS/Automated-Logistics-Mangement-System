@@ -47,6 +47,22 @@
     background-color:black;
     width: 100%;
   }
+
+  input[type=button] {
+    width: 20%;
+    background-color:grey;
+    color: white;
+    padding: 8px 14px;
+    margin-bottom: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  input[type=button]:hover {
+    background-color:black;
+    width: 20%;
+  }  
   
   form {
     text-align: left;

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import FormFields from '../../components/FormFields';
 import { updateVehicles } from '../../actions/vehiclesActions';
 import { addOrder } from '../../actions/ordersActions';
+import { toast } from 'react-toastify';
 
 const initSchema = {
     customerId: yup.string().required('*Select Customer'),
@@ -66,8 +67,7 @@ const AddOrder = (props) => {
             { label: "Vehicles", name: 'vehicleId', register, error: errors.vehicleId ? errors.vehicleId : {}, type: 'select', options: vehicleOptions }
         ];
         setFormFields(formFields)
-        // eslint-disable-next-line
-    }, [vehiclesState, itemsState, customersState]);
+    }, [vehiclesState, itemsState, customersState, errors.customerId, errors.vehicleId, register]);
 
     useEffect(() => {
         let totalPrice = 0;
@@ -89,8 +89,7 @@ const AddOrder = (props) => {
         if (customer) {
             setDeliveryLocation(customer.city);
         }
-        // eslint-disable-next-line
-    }, [watchAllFields]);
+    }, [watchAllFields, customersState, itemsState]);
 
     useEffect(() => {
         if (deliveryLocation) {
@@ -112,8 +111,7 @@ const AddOrder = (props) => {
             })
             setFormFields(formFieldsClone);
         }
-        // eslint-disable-next-line
-    }, [deliveryLocation]);
+    }, [deliveryLocation, errors.vehicleId, formFields, register, vehiclesState]);
 
     const onSubmit = (data, e) => {
         let formData = {
@@ -154,7 +152,8 @@ const AddOrder = (props) => {
         dispatch(addOrder(formDataClone));
         e.target.reset()
         setDeliveryLocation("")
-        setItemCount([1])
+        setItemCount([1]);
+        toast.dark("Order added!");
     }
 
     const handleAddItem = () => {
