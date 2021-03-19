@@ -11,7 +11,7 @@ export default function FormFields(props) {
                         <select name={name} ref={register}>
                             <option value="" hidden>Select</option>
                             {options.map(item => (
-                                <option key={item} value={item}>{item}</option>
+                                <option disabled={item.disabled} key={item.value} value={item.value}>{item.label}</option>
                             ))}
                         </select> <br />
                         {error && (

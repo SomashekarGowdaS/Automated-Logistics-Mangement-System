@@ -1,11 +1,14 @@
 import React from 'react'
+import OrdersList from './OrdersList'
+import AddOrder from './AddOrder'
 
 const OrdersContainer = (props) => {
 
 
     return (
         <div>
-            OrdersContainer Component
+            <OrdersList />
+            <AddOrder />
         </div>
     )
 }

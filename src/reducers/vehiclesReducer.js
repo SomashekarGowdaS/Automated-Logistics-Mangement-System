@@ -1,7 +1,10 @@
-const vehiclesInitialState = [];
+const vehiclesInitialState = [
+    { registrationNumber: 'ka03jh8796', vehicleType: 'Truck', city: 'Mysore' },
+    { registrationNumber: 'ka03yu5123', vehicleType: 'Bike', city: 'Mandya' }
+];
 
-const vehiclesReducer = (state = vehiclesInitialState, action) => {
-    switch(action.type) {
+export const vehiclesReducer = (state = vehiclesInitialState, action) => {
+    switch (action.type) {
         case 'ADD_VEHICLE': {
             return [...state, action.payload];
         }
@@ -11,5 +14,3 @@ const vehiclesReducer = (state = vehiclesInitialState, action) => {
         }
     }
 }
-
-export default vehiclesReducer

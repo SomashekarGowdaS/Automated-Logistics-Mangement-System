@@ -1,13 +1,12 @@
 import React from 'react'
 import { Route } from 'react-router'
-import CustomersContainer from './container/CustomersContainer';
-import Home from './container/Home'
-import ItemsContainer from './container/Items/ItemsContainer';
-import NavBar from './container/NavBar'
-import OrdersContainer from './container/OrdersContainer';
-import VehiclesContainer from './container/Vehicles/VehiclesContainer';
+import CustomersContainer from './containers/Customers';
+import Home from './containers/Home/Home'
+import ItemsContainer from './containers/Items';
+import NavBar from './containers/NavBar'
+import OrdersContainer from './containers/Orders';
+import VehiclesContainer from './containers/Vehicles';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (

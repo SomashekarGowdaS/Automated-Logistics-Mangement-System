@@ -4,12 +4,13 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import App from './App';
 import configureStore from './store/configureStore';
+import 'react-toastify/dist/ReactToastify.css';
 
 ReactDOM.render(
-    <Provider store={configureStore()} >
-      <BrowserRouter>
-        <App />
+  <Provider store={configureStore()} >
+    <BrowserRouter>
+      <App />
     </BrowserRouter>
-    </Provider>,
+  </Provider>,
   document.getElementById('root')
 );

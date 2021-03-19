@@ -1,29 +1,27 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { v4 } from 'uuid';
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { addItem } from '../../actions/itemsActions';
-import FormFields from '../../components/FormFields'
+import { v4 } from 'uuid';
+import FormFields from '../../components/FormFields';
+import { addCustomer } from '../../actions/customersActions';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 
 const schema = yup.object().shape({
-    itemName: yup.string().required(),
-    price: yup
-        .number()
-        .required()
-        .positive()
+    customerName: yup.string().required(),
+    city: yup.string().required()
 });
 
-const AddItem = (props) => {
+const AddCustomer = (props) => {
     const { register, handleSubmit, errors } = useForm({
         resolver: yupResolver(schema),
     });
     const dispatch = useDispatch();
 
     const formFields = [
-        { label: "Item Name", name: 'itemName', register, error: errors.itemName ? errors.itemName : {} },
-        { label: "Price", name: 'price', register, error: errors.price ? errors.price : {} }
+        { label: "Customer Name", name: 'customerName', register, error: errors.customerName ? errors.customerName : {} },
+        { label: "City", name: 'city', register, error: errors.city ? errors.city : {} }
     ]
 
     const onSubmit = (data) => {
@@ -31,19 +29,20 @@ const AddItem = (props) => {
             id: v4(),
             ...data,
         }
-        dispatch(addItem(formData));
+        dispatch(addCustomer(formData));
+        toast.dark("Customer added!");
     }
-    console.log(errors)
+
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)} >
                 {formFields.map(field => (
                     <FormFields key={field.name} {...field} />
                 ))}
-                <input type="submit" value="Add Item" />
+                <input type="submit" value="Add Customer" />
             </form>
         </div>
     )
 }
 
-export default AddItem
+export default AddCustomer
